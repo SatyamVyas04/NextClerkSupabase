@@ -1,7 +1,7 @@
 import crypto from "crypto";
 
-const MASTER_KEY = process.env.MASTER_ENCRYPTION_KEY;
-const ALGORITHM = "aes-256-cbc";
+const MASTER_KEY = process.env.MASTER_ENCRYPTION_KEY || "master";
+const ALGORITHM = "aes-256-gcm";
 const IV_LENGTH = 16;
 const SALT_LENGTH = 16;
 const KEY_LENGTH = 32;
@@ -19,7 +19,9 @@ export function encryptUserKey(userKey: string): string {
 	const salt = crypto.randomBytes(SALT_LENGTH);
 	const derivedKey = deriveKey(MASTER_KEY, salt);
 	const iv = crypto.randomBytes(IV_LENGTH);
-	const cipher = crypto.createCipheriv(ALGORITHM, derivedKey, iv);
+	const cipher = crypto.createCipheriv(ALGORITHM, derivedKey, iv, {
+		authTagLength: 16,
+	});
 	let encrypted = cipher.update(userKey, "utf8", "hex");
 	encrypted += cipher.final("hex");
 	return salt.toString("hex") + ":" + iv.toString("hex") + ":" + encrypted;
@@ -31,7 +33,9 @@ export function decryptUserKey(encryptedUserKey: string): string {
 	const iv = Buffer.from(ivHex, "hex");
 	const derivedKey = deriveKey(MASTER_KEY, salt);
 	const encryptedText = Buffer.from(encryptedHex, "hex");
-	const decipher = crypto.createDecipheriv(ALGORITHM, derivedKey, iv);
+	const decipher = crypto.createDecipheriv(ALGORITHM, derivedKey, iv, {
+		authTagLength: 16,
+	});
 	let decrypted = decipher.update(encryptedText);
 	decrypted = Buffer.concat([decrypted, decipher.final()]);
 	return decrypted.toString("utf8");
