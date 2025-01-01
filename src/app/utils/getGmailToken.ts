@@ -10,7 +10,7 @@ interface UserResponse {
 export const fetchAndStoreGmailToken = async (
 	req: NextRequest
 ): Promise<string> => {
-	console.log("Fetching stored Gmail token");
+	
 	try {
 		const { getToken } = getAuth(req);
 		const token = await getToken();
@@ -24,7 +24,7 @@ export const fetchAndStoreGmailToken = async (
 				Authorization: `Bearer ${token}`,
 			},
 		});
-		console.log("Response received:", response.status);
+		
 
 		if (!response.ok) {
 			const errorData: { error: string } = await response.json();
@@ -34,7 +34,7 @@ export const fetchAndStoreGmailToken = async (
 		}
 
 		const data: UserResponse = await response.json();
-		console.log("Stored Gmail token fetched:", data);
+		
 		return data.user.gmailAccessToken;
 	} catch (error) {
 		console.error("Error fetching stored Gmail token:", error);

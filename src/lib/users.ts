@@ -12,7 +12,7 @@ export async function createUser(
 	data: Partial<User> & { encryptedUserKey: string }
 ) {
 	try {
-		console.log("Creating user with data:", data);
+		
 		const user = await prisma.user.create({
 			data: {
 				...data,
@@ -20,7 +20,7 @@ export async function createUser(
 				encryptedUserKey: data.encryptedUserKey,
 			} as User,
 		});
-		console.log("User created:", serializeUser(user));
+		
 		return serializeUser(user);
 	} catch (error) {
 		console.error("Error creating user:", error);
@@ -71,17 +71,15 @@ export async function getUserById({
 
 export async function updateUser(clerkUserId: string, data: Partial<User>) {
 	try {
-		console.log(
-			`Attempting to update user with clerkUserId: ${clerkUserId}`
-		);
-		console.log("Update data:", data);
+		
+		
 
 		const user = await prisma.user.update({
 			where: { clerkUserId },
 			data,
 		});
 
-		console.log("User updated successfully:", user);
+		
 		return { user: serializeUser(user) };
 	} catch (error) {
 		console.error("Error updating user:", error);
