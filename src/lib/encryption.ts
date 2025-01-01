@@ -57,15 +57,15 @@ export function decryptData(
 	encryptedUserKey: string
 ): string {
 	try {
-		console.log("Starting decryption process");
+		
 		const userKey = decryptUserKey(encryptedUserKey);
-		console.log("User key decrypted successfully");
+		
 
 		const [saltHex, ivHex, encryptedHex] = encryptedData.split(":");
 		if (!saltHex || !ivHex || !encryptedHex) {
 			throw new Error("Invalid encrypted data format");
 		}
-		console.log("Encrypted data split successfully");
+		
 
 		const salt = Buffer.from(saltHex, "hex");
 		const iv = Buffer.from(ivHex, "hex");
@@ -75,7 +75,7 @@ export function decryptData(
 		let decrypted = decipher.update(encryptedText);
 		decrypted = Buffer.concat([decrypted, decipher.final()]);
 
-		console.log("Decryption completed successfully");
+		
 		return decrypted.toString("utf8");
 	} catch (error) {
 		console.error("Decryption error:", error);
