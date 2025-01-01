@@ -19,7 +19,7 @@ async function fetchGmailToken(userId: string) {
 			"oauth_google"
 		);
 		if (!oauthTokens || oauthTokens.data.length === 0) {
-			console.log("No OAuth tokens found for the user");
+			
 			return null;
 		}
 		return oauthTokens.data[0].token;
@@ -34,7 +34,7 @@ async function fetchGmailToken(userId: string) {
 }
 
 export async function POST(req: Request) {
-	console.log("Webhook POST request received");
+	
 
 	if (!WEBHOOK_SECRET) {
 		console.error("CLERK_WEBHOOK_SECRET is not set");
@@ -84,7 +84,7 @@ export async function POST(req: Request) {
 	}
 
 	const eventType = evt.type;
-	console.log("Webhook event type:", eventType);
+	
 
 	if (eventType === "user.created") {
 		const { id, email_addresses, first_name, last_name, image_url } =
@@ -102,7 +102,7 @@ export async function POST(req: Request) {
 		}
 
 		try {
-			console.log("Fetching Gmail token for new user");
+			
 			const gmailAccessToken = await fetchGmailToken(id);
 
 			const userKey = generateUserKey();
@@ -118,9 +118,9 @@ export async function POST(req: Request) {
 				gmailAccessToken,
 			};
 
-			console.log("Attempting to create user:", user);
+			
 			const createdUser = await createUser(user as User);
-			console.log("User created successfully:", createdUser);
+			
 			return NextResponse.json(
 				{ message: "User created successfully" },
 				{ status: 200 }
@@ -156,7 +156,7 @@ export async function POST(req: Request) {
 					{ status: 500 }
 				);
 			}
-			console.log(`User soft deleted: ${clerkUserId}`);
+			
 			return NextResponse.json(
 				{ message: "User soft deleted successfully" },
 				{ status: 200 }
@@ -170,7 +170,7 @@ export async function POST(req: Request) {
 		}
 	}
 
-	console.log("Webhook processed successfully");
+	
 	return NextResponse.json(
 		{ message: "Webhook processed successfully" },
 		{ status: 200 }
