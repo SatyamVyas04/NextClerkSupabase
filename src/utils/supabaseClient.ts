@@ -1,9 +1,6 @@
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
 
 export const supabaseClient = (): SupabaseClient => {
-	
-	
-	
 
 	if (
 		!process.env.NEXT_PUBLIC_SUPABASE_URL ||
